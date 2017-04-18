@@ -5,9 +5,12 @@
 #include <SDL2/SDL_image.h>
 #include "unit.h"
 
+
+// Constants
 #define RENDER_GFX_FILENAME "/home/jjwmezun/Documents/c/peppers-party/resources/gfx.png"
 
-// Private members
+
+// Private Members
 SDL_Window *window_;
 SDL_Renderer *renderer_;
 SDL_Texture *render_gfx_;
@@ -17,8 +20,15 @@ SDL_Rect render_src_  = { 0, 0, OBJ_SIZE, OBJ_SIZE };
 SDL_Rect render_dest_ = { 0, 0, OBJ_SIZE, OBJ_SIZE };
 
 
+// Demo Victory
+#define RENDER_DEMO_WIN_SCREEN_FILENAME "/home/jjwmezun/Documents/c/peppers-party/resources/demo-win-screen.png"
+SDL_Texture *render_demo_win_screen_;
+bool render_win_started_ = false;
+
+
 // Private Function Declarations
 bool render_load_gfx( void );
+bool render_load_texture( const char *filename );
 void render_rect( const SDL_Rect *coords, const SDL_Color *color );
 
 
@@ -79,13 +89,21 @@ void render_destroy( void )
 
 bool render_load_gfx( void )
 {
-	assert( render_gfx_ == NULL );
+	return render_load_texture( RENDER_GFX_FILENAME );
+}
 
-	SDL_Surface *surface = IMG_Load( RENDER_GFX_FILENAME );
+bool render_load_texture( const char *filename )
+{
+	if ( render_gfx_ != NULL )
+	{
+		SDL_DestroyTexture( render_gfx_ );
+	}
+
+	SDL_Surface *surface = IMG_Load( filename );
 
 	if ( surface == NULL )
 	{
-		SDL_Log( "Unable to load surface \"%s\": %s", RENDER_GFX_FILENAME, SDL_GetError() );
+		SDL_Log( "Unable to load surface \"%s\": %s", filename, SDL_GetError() );
 		return false;
 	}
 
@@ -93,7 +111,7 @@ bool render_load_gfx( void )
 
 	if ( render_gfx_ == NULL )
 	{
-		SDL_Log( "Unable to create texture for \"%s\": %s", RENDER_GFX_FILENAME, SDL_GetError() );
+		SDL_Log( "Unable to create texture for \"%s\": %s", filename, SDL_GetError() );
 		return false;
 	}
 
@@ -129,4 +147,18 @@ void render_rect( const SDL_Rect *coords, const SDL_Color *color )
 {
 	SDL_SetRenderDrawColor( renderer_, color->r, color->g, color->b, color->a );
 	SDL_RenderFillRect( renderer_, coords );
+}
+
+void render_demo_win_screen( void )
+{
+	if ( !render_win_started_ )
+	{
+		render_load_texture( RENDER_DEMO_WIN_SCREEN_FILENAME );
+	}
+	
+	const SDL_Rect src = { 0, 0, WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS };
+	SDL_Rect dest = src;
+	dest.x = render_magnify( dest.x );
+	dest.y = render_magnify( dest.y );
+	SDL_RenderCopy( renderer_, render_gfx_, &src, &dest );
 }

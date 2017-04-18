@@ -11,5 +11,6 @@ void render_destroy( void );
 void render_start( void );
 void render_end( void );
 void render_obj( const graphics *gfx );
+void render_demo_win_screen( void );
 
 #endif

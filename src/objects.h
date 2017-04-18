@@ -9,8 +9,8 @@
 
 typedef enum obj_type
 {
-	OBJ_TYPE_NULL = -1,
-	OBJ_TYPE_HERO = 0,
+	OBJ_TYPE_HERO = -1,
+	OBJ_TYPE_NULL = 0,
 	OBJ_TYPE_GROUND = 1,
 	OBJ_TYPE_BLOCK = 2,
 	OBJ_TYPE_BALL = 3,

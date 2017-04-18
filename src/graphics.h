@@ -12,6 +12,7 @@ typedef struct graphics
 	int dest_y;
 	double rotation;
 	bool flip_x;
+	bool priority;
 } graphics;
 
 #endif
